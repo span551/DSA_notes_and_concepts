@@ -1,0 +1,13 @@
+int evalRPN(String[] tokens) {
+    Deque<Integer> st = new ArrayDeque<>();
+    for (String t : tokens) {
+        switch (t) {
+            case "+" -> st.push(st.pop() + st.pop());
+            case "-" -> { int b=st.pop(), a=st.pop(); st.push(a - b); }
+            case "*" -> st.push(st.pop() * st.pop());
+            case "/" -> { int b=st.pop(), a=st.pop(); st.push(a / b); }
+            default  -> st.push(Integer.valueOf(t));
+        }
+    }
+    return st.pop();
+}
