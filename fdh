@@ -1,0 +1,8 @@
+boolean isValidBST(TreeNode root) {
+    return helper(root, null, null);
+}
+boolean helper(TreeNode node, Integer lo, Integer hi) {
+    if (node == null) return true;
+    if ((lo != null && node.val <= lo) || (hi != null && node.val >= hi)) return false;
+    return helper(node.left, lo, node.val) && helper(node.right, node.val, hi);
+}
