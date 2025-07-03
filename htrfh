@@ -1,0 +1,25 @@
+ListNode reverseKGroup(ListNode head, int k) {
+    ListNode dummy = new ListNode(0), prev = dummy;
+    dummy.next = head;
+    while (true) {
+        ListNode node = prev;
+        for (int i = 0; i < k && node != null; i++) node = node.next;
+        if (node == null) break;
+        ListNode start = prev.next, next = node.next;
+        node.next = null;
+        prev.next = reverse(start);
+        start.next = next;
+        prev = start;
+    }
+    return dummy.next;
+}
+ListNode reverse(ListNode head) {
+    ListNode prev = null;
+    while (head != null) {
+        ListNode next = head.next;
+        head.next = prev;
+        prev = head;
+        head = next;
+    }
+    return prev;
+}
