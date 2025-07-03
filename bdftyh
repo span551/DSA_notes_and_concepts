@@ -1,0 +1,8 @@
+int maxMeetings(int[][] a) {
+    Arrays.sort(a, Comparator.comparingInt(x -> x[1]));
+    int count = 0, lastEnd = -1;
+    for (int[] m : a) {
+        if (m[0] > lastEnd) { count++; lastEnd = m[1]; }
+    }
+    return count;
+}
