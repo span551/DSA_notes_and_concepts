@@ -1,0 +1,12 @@
+int subarraysDivByK(int[] nums, int k) {
+    Map<Integer,Integer> modCount = new HashMap<>();
+    modCount.put(0,1);
+    int sum=0, count=0;
+    for(int x:nums){
+        sum+=x;
+        int mod=((sum%k)+k)%k;
+        count+=modCount.getOrDefault(mod,0);
+        modCount.put(mod, modCount.getOrDefault(mod,0)+1);
+    }
+    return count;
+}
