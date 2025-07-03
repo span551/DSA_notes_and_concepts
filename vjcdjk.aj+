@@ -1,0 +1,15 @@
+int[][] fillSpiral(int n) {
+    int[][] m = new int[n][n];
+    int val=1, top=0, left=0, right=n-1, bottom=n-1;
+    while(top<=bottom && left<=right){
+        for(int j=left;j<=right;j++) m[top][j]=val++;
+        top++;
+        for(int i=top;i<=bottom;i++) m[i][right]=val++;
+        right--;
+        for(int j=right;j>=left;j--) m[bottom][j]=val++;
+        bottom--;
+        for(int i=bottom;i>=top;i--) m[i][left]=val++;
+        left++;
+    }
+    return m;
+}
