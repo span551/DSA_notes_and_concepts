@@ -1,0 +1,17 @@
+void wallsAndGates(int[][] rooms) {
+    int m = rooms.length, n = rooms[0].length;
+    Deque<int[]> dq = new ArrayDeque<>();
+    for (int i = 0; i < m; i++)
+        for (int j = 0; j < n; j++)
+            if (rooms[i][j] == 0) dq.offer(new int[]{i, j});
+    int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+    while (!dq.isEmpty()) {
+        int[] cell = dq.poll();
+        for (int[] d : dirs) {
+            int x = cell[0] + d[0], y = cell[1] + d[1];
+            if (x < 0 || y < 0 || x >= m || y >= n || rooms[x][y] != Integer.MAX_VALUE) continue;
+            rooms[x][y] = rooms[cell[0]][cell[1]] + 1;
+            dq.offer(new int[]{x, y});
+        }
+    }
+}
