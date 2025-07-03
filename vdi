@@ -1,0 +1,20 @@
+List<Integer> findSubstring(String s, String[] words) {
+    int n=s.length(), m=words.length, wl=words[0].length(), len = m*wl;
+    List<Integer> res=new ArrayList<>();
+    Map<String,Integer> count=new HashMap<>();
+    for(String w:words) count.put(w, count.getOrDefault(w,0)+1);
+    for(int i=0;i+len<=n;i++){
+        Map<String,Integer> seen=new HashMap<>();
+        int j=0;
+        while(j<m){
+            String w=s.substring(i+j*wl,i+j*wl+wl);
+            if(count.containsKey(w)){
+                seen.put(w,seen.getOrDefault(w,0)+1);
+                if(seen.get(w)>count.get(w)) break;
+            } else break;
+            j++;
+        }
+        if(j==m) res.add(i);
+    }
+    return res;
+}
