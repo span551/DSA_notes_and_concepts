@@ -1,0 +1,25 @@
+int kruskalMST(int n, int[][] edges) {
+    Arrays.sort(edges, Comparator.comparingInt(a -> a[2]));
+    UnionFind uf = new UnionFind(n);
+    int res = 0;
+    for (int[] e : edges) {
+        if (uf.union(e[0], e[1])) res += e[2];
+    }
+    return res;
+}
+class UnionFind {
+    int[] p, r;
+    UnionFind(int n) {
+        p = new int[n]; r = new int[n];
+        for (int i = 0; i < n; i++) p[i] = i;
+    }
+    int find(int x) { return p[x] == x ? x : (p[x] = find(p[x])); }
+    boolean union(int a, int b) {
+        a = find(a); b = find(b);
+        if (a == b) return false;
+        if (r[a] < r[b]) p[a] = b;
+        else if (r[b] < r[a]) p[b] = a;
+        else { p[b] = a; r[a]++; }
+        return true;
+    }
+}
