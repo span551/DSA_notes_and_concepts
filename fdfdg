@@ -1,0 +1,22 @@
+StringBuilder sb = new StringBuilder();
+void dfsSer(TreeNode root) {
+    if (root == null) { sb.append("#,"); return; }
+    sb.append(root.val).append(",");
+    dfsSer(root.left); dfsSer(root.right);
+}
+String serialize(TreeNode root) {
+    dfsSer(root);
+    return sb.toString();
+}
+TreeNode dfsDes(Queue<String> q) {
+    String val = q.poll();
+    if (val.equals("#")) return null;
+    TreeNode root = new TreeNode(Integer.valueOf(val));
+    root.left = dfsDes(q);
+    root.right = dfsDes(q);
+    return root;
+}
+TreeNode deserialize(String data) {
+    Queue<String> q = new LinkedList<>(Arrays.asList(data.split(",")));
+    return dfsDes(q);
+}
