@@ -1,0 +1,12 @@
+int maxEnvelopes(int[][] e) {
+    Arrays.sort(e, (a,b)->a[0]==b[0]?b[1]-a[1]:a[0]-b[0]);
+    List<Integer> lis = new ArrayList<>();
+    for(int[] e1: e){
+        int h = e1[1];
+        int i = Collections.binarySearch(lis, h);
+        if(i<0) i=-(i+1);
+        if(i==lis.size()) lis.add(h);
+        else lis.set(i,h);
+    }
+    return lis.size();
+}
