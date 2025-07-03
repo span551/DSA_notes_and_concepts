@@ -1,0 +1,19 @@
+Node copyRandomList(Node head) {
+    if (head == null) return null;
+    for (Node n = head; n != null; n = n.next.next) {
+        Node nxt = new Node(n.val);
+        nxt.next = n.next;
+        n.next = nxt;
+    }
+    for (Node n = head; n != null; n = n.next.next) {
+        if (n.random != null)
+            n.next.random = n.random.next;
+    }
+    Node newHead = head.next;
+    for (Node n = head; n != null; n = n.next) {
+        Node copy = n.next;
+        n.next = copy.next;
+        copy.next = copy.next != null ? copy.next.next : null;
+    }
+    return newHead;
+}
