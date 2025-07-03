@@ -1,0 +1,10 @@
+List<List<String>> groupAnagrams(String[] ss) {
+    Map<String, List<String>> map = new HashMap<>();
+    for (String s : ss) {
+        char[] arr = s.toCharArray();
+        Arrays.sort(arr);
+        String k = new String(arr);
+        map.computeIfAbsent(k, x -> new ArrayList<>()).add(s);
+    }
+    return new ArrayList<>(map.values());
+}
