@@ -1,0 +1,10 @@
+int rob(int[] nums) {
+    int incl = 0, excl = 0;
+    for (int x : nums) {
+        int ni = excl + x;
+        excl = Math.max(incl, excl);
+        incl = ni;
+    }
+    return Math.max(incl, excl);
+}
+// for circular house (II): run rob on [0, n-2] and [1, n-1]
