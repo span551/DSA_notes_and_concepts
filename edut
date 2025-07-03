@@ -1,0 +1,14 @@
+int trap(int[] h) {
+    Deque<Integer> st = new ArrayDeque<>();
+    int ans = 0, idx = 0;
+    while (idx < h.length) {
+        while (!st.isEmpty() && h[idx] > h[st.peek()]) {
+            int top = st.pop();
+            if (st.isEmpty()) break;
+            int distance = idx - st.peek() - 1;
+            ans += distance * (Math.min(h[idx], h[st.peek()]) - h[top]);
+        }
+        st.push(idx++);
+    }
+    return ans;
+}
