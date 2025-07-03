@@ -1,0 +1,8 @@
+int[] findRedundantConnection(int[][] E) {
+    int n = E.length;
+    UnionFind uf = new UnionFind(n + 1);
+    for (int[] e : E) {
+        if (!uf.union(e[0], e[1])) return e;
+    }
+    return new int[0];
+}
