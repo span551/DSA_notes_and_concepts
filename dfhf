@@ -1,0 +1,19 @@
+List<List<Integer>> levelOrderBottom(TreeNode root) {
+    List<List<Integer>> res = new ArrayList<>();
+    if (root == null) return res;
+    Deque<TreeNode> dq = new ArrayDeque<>();
+    dq.offer(root);
+    while (!dq.isEmpty()) {
+        int sz = dq.size();
+        List<Integer> lvl = new ArrayList<>();
+        while (sz-- > 0) {
+            TreeNode node = dq.poll();
+            lvl.add(node.val);
+            if (node.left != null) dq.offer(node.left);
+            if (node.right != null) dq.offer(node.right);
+        }
+        res.add(lvl);
+    }
+    Collections.reverse(res);
+    return res;
+}
