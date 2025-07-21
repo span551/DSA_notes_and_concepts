@@ -1,0 +1,32 @@
+Algorithm
+
+An algorithm is a problem solving technique or step by step method to find a solution to a given problem. The choice of a good algorithm greatly affects the efficiency of a program. 
+
+Definition - An algorithm is a finite set of instructions which if followed can accompalish a particular task.
+
+Algorithms are language independent i.e. they can be implemented using any programming language. For e.g. C, C++, Java, Python, etc.
+
+The main criteria to judge the performance of an algorithm is "space & time complexity".
+
+Space complexity of an algorithm is the amount of space /memory required by the program to complete it's execution.
+
+Time complexity is the amount of time taken by a program to complete a given task. 
+
+The performance of an algorithm can also be judged on the basis of type and amount of input. For eg some sorting algorithms may perform better for random inputs whereas some may not.
+
+Algorithms have different approaches for solving a problem
+
+1. Divide and Conquer - It involves breaking down a problem into smaller and more manageable sub problems. Egs Binary Search, Merge Sort, Quick Sort, etc.
+
+2. Brute Force - It involves solving a problem by trying out all possible solutions until it finds one that satisfies the required conditions. Eg Linear Search, Bubble Sort, Password cracking, etc.
+
+3. Greedy - It makes a locally optimal choice at each stage with the hope of finding a final optimum solution. For eg Dijkstra's algorithm for finding shortest path between any 2 vertices on the graph, Prim's and Kruskal's algorithm for finding minimum spanning tree of a weighted graph.
+
+4. Backtracking - It involves solving a problem recursively by building solutions step by step and abandoning these solutions if they fail to satisfy the constraints of the problem at any given point of time. For eg the N Queens Problem on a chess board, Sudoko, etc.
+
+5. Dynamic Programming - It involves breaking a problem into overlapping subproblems and storing the solutions to avoid redundant calculations. It's often used for optimization problems. For eg to determine the nth fibonacci term using recursive function.
+
+
+
+
+

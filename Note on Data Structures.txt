@@ -1,0 +1,12 @@
+Data Structures
+
+Computer science can be defined as the study of data, it's representation & transformation. Once the data is stored, it has to be accessed & manipulated several times. To achieve this, every programming language provides us with a set of built-in datatypes which allows us to store the data in a meaningful format. The language also provides us with a set of operators to manipulate this data.
+
+Computers are used to handle complex problems & huge data. To solve these problems, the basic datatypes provided by these languages are not sufficient & hence the need for "data structures", which gives more structure or shape or form to our data.
+
+These data structures can be a combination of basic data types with specific properties & operations permitted on them. Some such structures are Linked List, Stack, Queue, Trees, Graphs, etc.
+
+Data Structures are categorised into 2 types
+1. Linear  2. Non-Linear
+
+In linear data structures, there is 1-1 relationship between the elements and these elements are ordered in a line. However in non-linear data structures, the elements show 1-many relationships.

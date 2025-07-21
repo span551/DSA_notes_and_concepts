@@ -1,0 +1,173 @@
+Features of Java
+
+1. Java is Platform independent i.e. it is independent of processor & O.S.
+2. Simple - Initially bcoz most of the syntax are borrowed from C/C++. Also memory management is handled by JRE rather than developer. 
+C - malloc() & free() functions
+C++ - new & delete operators
+
+If the developer forgets to free the memory allocated dynamically i.e. runtime, this used to lead to a serious problem called as memory leak.
+Compile time memory is allocated on a stack frame which is managed by the compiler. For eg if there is a function call and after the function is completely executed, the compiler will deallocate the memory allocated for that function automatically.
+Dynamic memory is allocated on the heap. Heap memory is very huge as compared to stack frame but needs to be handled carefully by developer.
+
+3. Object Oriented - How this helps?
+OOPs features are
+
+a. Encapsulation - means keeping things (members) together and preventing them from unauthorised access. How will you enforce encapsulation OR what is the basis for encapsulation?
+i) Using class definition - No statement other than "import" and "package" outside class definition
+ii) Access specifiers - 4 access specifiers a. private  b. public  c. protected & if unspecified package by default. eg main( ) method is declared as "public" so that it is accessible to java interpreter a program
+which is in a different path as that of executing java program.
+iii) Scope - Scopes are defined using a pair of { }. Variables declared in inner scope are not accessible to the code of outer scope. However variables declared in outer scope are accessible to inner scope.
+
+for (int i=0;i<10;i++)  // var i is declared in scope of "for" command
+	SOP("Hello");
+
+for (int i=0;i<5;i++)
+	SOP("Hi");
+
+// to avoid redundancy in declaration
+{
+	int i;
+
+	for (i=0;.....)
+		SOP(" ");
+
+	for (i=0;.....)
+		SOP("  ");
+}
+
+ii) Inheritance - This feature allows a class to inherit / borrow the features or properties of another class. The class that is inherited is called as "super class" & the one that does the inheriting is called as "sub class". The sub class is an improvised version of super class which contains all features of super class + adds it's own features. Using inheritance, we can avoid redundancy of code and allow extensibility.
+
+Java supports only 3 types of inheritance
+1. Single  2. Multilevel 3. Hierarchial
+
+Java doesn't support 
+1. Multiple 2. Hybrid 
+
+Student		Project
+    |                                 |
+    ----------------------------
+                     |
+             Student_Project
+
+class Student_Project extends Student, Project   // compile error
+{
+}
+
+3 solutions to overcome this limitation
+
+i) Use composite objects
+
+class D extends A
+{
+	B obj = new B();
+	C obj = new C();
+	....
+}
+
+ii) Inner classes
+
+class D
+{
+	class A
+	{
+	}
+	class B
+	{
+	}
+	class C
+	{
+	}
+}
+
+iii) Using interfaces  (Most convincing ans)
+
+An interface is similar to an abstract class but with static constants (no instance members allowed) and all it's methods must be abstract.
+
+A class which symbolises some concept but cannot be defined physically is called as abstract class. For eg Vehicle, Food, Employee, Colour, Shape, etc. Such classes cannot be instantiated but can become a superclass for some other class. An abstract class will contain 1 or more abstract methods. Abstract methods are the one with no implementation & it is compulsory for it's sub classes to override or provide implementation of abstract methods.
+
+// a class to manage 2D shapes
+class Shape
+{
+	protected int dim1, dim2;
+
+	Shape(int x,int y)
+	{
+		dim1 = x;
+		dim2 = y;
+	}
+	
+	public abstract double getArea();   // abstract bcoz the expression to calculate area of
+				// of different shapes is different
+}
+
+The main advantage of inheritance is the principle of "dynamic method dispatch".
+Which method to dispatch for execution is decided at run time. 
+To enforce this, java uses a principle, "a super class reference can refer to any sub class object". When different types of sub class objects are referred, diffrerent versions of "overridden" methods will be called. 
+
+Suppose we have say 4 types of employees. a. Temporary b. Permanent  c. Skilled  d. Unskilled.
+Suppose we want to accept the data of 100 emps, then if we use arrays, as arrays contain homogenous elements, we need to create separate arrays of each type and here lot of memory will be wasted.
+
+So the only solution to this problem is to create an array of super class reference i.e. Emp
+
+Emp recs[ ] = new Emp[100];
+recs[0] = new Temp_Emp();
+recs[1] = new Perm_Emp();   // OK
+
+recs[0].accept();  // Temp emp's accept --> rate per hr, hrs wkd
+recs[1].accept();  // Perm emp's accept --> designation, salary
+
+But note that Emp should be super class for Temp_Emp and Perm_Emp with method accept() to be overridden by sub classes.
+
+iv) Abstraction - Hiding the complexity/details of a process/component.
+
+Wrapper Classes
+
+In java we have 2 datatypes 1. Primitive datatypes (PDT) like int, char, float, boolean, etc
+
+		            2. Object type
+
+PDT can only hold data whereas Object types contain methods which can act/process the data.
+For eg String is not a pdt & contains strings which can be processed using toUpperCase(), contains(), substring(), etc.
+
+For eg if we receive a year from user as command line argument, it is accepted as a String object. Now to use mathemetical operators for testing whether it is a leap year or not, we need this year in "int" format. So to facilitate this conversion i.e. String --> int, typecast is of no use.
+
+		int year = (int) args[0]; // error, incompatible types
+		int year = Integer.parseInt(args[0]);  // "1990" ==>  1990
+
+		String str = Integer.toString(100);  // 100 ==> "100"
+
+Exceptions - Generally these are runtime errors and not compile errors which abnormally stop the execution of a program. How many types of exceptions are there in java?
+
+1. checked   2. unchecked
+
+checked exceptions are the one which need to be specified even for the program to get compile. They are generally managed using "throws" clause in method declaration.
+
+
+public static void main(String args[ ]) throws IOException, InterruptedException, SQLException,...
+{
+
+}
+
+unchecked exceptions are not compulsory for the program to compile and normally inherit the class RuntimeException. These exceptions are managed using try....catch clause
+
+eg ArithmeticException (when attempt is made to divide by 0)
+     ArrayIndexOutOfBoundsException (when attempt is made to access an element out of array range)
+     FileNotFoundException (attempting read or write operation on non existing file)
+    ....
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+	
+
+

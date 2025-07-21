@@ -1,0 +1,118 @@
+Collections
+
+These collections are a part of java.util package and are used to manage a group of objects. The collections comprise of list, stack, queue, set, tree, graph, etc. It is actually an implementation of std data structures through Java.
+
+Some of the popular collections are
+
+1. Vector - A vector is similar to a dynamic array. However unlike array, vectors are expandable at runtime. Also another advantage is that they offer flexibility in the sense that they can be used to store homogenous or hetrogenous elements. Vectors are created with some initial capacity. However, when a vector is full, it's capacity is doubled auto.
+
+Vector class has following constructors
+
+1. Vector() - The default constructor will initialise the vector to a default capacity of 10 elements
+
+2. Vector(int capacity) - Will initialise the vector to given capacity
+
+3. Vector(int capacity,int increment_no) - If the capacity is full, the vector will be allocated memory to accomodate the specified no of elements in increment_no
+
+4.  Vector(Collection) - Vector can be created using the elements of another collection
+
+5. add(Item obj) OR addElement(Item obj) - Item is a class (predefined or Userdefined)
+			- To add an element at the end of vector
+
+6. insertElementAt(Item obj,int pos) - To insert an element in vector at given position. Elements on RHS will move to the right by single position.
+
+7. removeElementAt(int pos) - To remove an element from vector at given pos
+
+8. removeElement(Item obj) - To remove an item obj from vector
+
+9. capacity() - Returns the capacity of vector
+
+10. size() - Returns the no of elements in vector
+		size / capacity - Load factor
+
+11. elementAt(int pos) - To display the element at given position
+
+
+2. LinkedList - This class extends the AbstractSequentialList & implements List, Queue & Deque interfaces. It provides the Linked list structure.
+
+The LinkedList class has 2 constructors
+
+1. LinkedList()
+2. LinkedList(Collection)
+
+Some of the imp methods of this collection are add(), addFirst(), addLast(), remveFirst(), removeLast(), clear() and get()
+
+3. Comparator Interface :-
+
+This interface is a part of java.util package. The Collections.sort( ) sorts the objects of a collection by comparing the objects. Here the sorting is carried out according to the natural ordering. However if we want to sort/arrange them on the basis of some other field, then we need to use the Comparator interface to specify how the objects should be compared.
+
+The Comparator interface contains 2 methods equals( ) and compare( ). The equals( ) indicates whether some other object is "equal to" this comparator. Overriding this method is not necessary in most of the programs. The compare( ) is required often & compares 2 objects. 
+
+It’s type signature is :-
+
+		int compare(Object obj1,Object obj2);
+
+The method returns a negative number, zero or a positive number depending upon whether the first argument is less than, equal to or greater than the second argument. It throws ClassCastException if the argument types are inappropriate from being compared by the comparator.
+
+e.g. if a LinkedList contains objects of Student type, then using Comparator interface, it is possible to arrange the Student objects by Percent in DESC order and for same percent, to rearrange the objects by Name of student.
+
+
+4. ArrayList - This class extends the AbstractList & implements the List interface. Standard arrays in JAVA have a fixed length, even though they are dynamic. However ArrayList supports dynamic arrays but which can grow/shrink as needed i.e. they are expandable.
+
+ArrayList supports the methods add(), remove(), size() & get().
+
+Differences between ArrayList and LinkedList
+
+I. A LinkedList is a collection in which every object (node) in the linked list maintains a pointer to the next object in the list. No array is involved at all. The list is managed entirely by these pointers. However the ArrayList class actually uses an array internally to store it's data. It manages the size of the array in the sense that if we add an element in an ArrayList & if the underlying array is already full, then the ArrayList class creates a new array with larger capacity and copies all the existing elements/items to the new array & then also adds the new element.
+
+II. In case of a LinkedList inserting or removing an item/element is pretty efficient bcoz all we need to do is to update the pointers of the predecessor & successor nodes. However this is not the case with an ArrayList which involves moving the elements of the underlying array by 1 position near/away from existing element.
+
+III. The LinkedList do not have any size issues & we can go on adding the elements anywhere in memory until the computer/system runs out of memory. However the ArrayList will always require continuous memory locations, which may be difficult at some point.
+
+5. Hashtable Collection
+
+This collection is used to store name/value pairs. The name serves as a key & has to be unique and not null value. The advantage of storing data in a Hashtable is 
+1. It doesn't store duplicate values
+2. The hashtable doesn't use the comparison techniques to search for a value eg linear, binary or fibonacci search. Here java uses a different technique for storing & retrieving elements. It uses a function for this purpose. The function calculates an unique location for hashing an element & uses the same function for it's retrieval & hence is very efficient.
+
+6. Enumeration interface
+
+This interface defines the methods by which we can enumerate (obtain one at a time) the elements in a collection of objects. It has 2 imp. methods
+
+1. boolean hasMoreElements()
+2. Object nextElement()
+
+When implemented, hasMoreElements() must return true if there are more elements in collection to extract and false when all the elements have been enumerated. The nextElement() returns the next Object in the enumeration. It throws NoSuchElementException when the fetching process is complete.
+
+7. Set – The Set interface extends the Collection interface and defines a set of elements similar to a list except that a set doesn’t permit duplicate elements.
+
+To add the elements of a Collection like Vector, List, etc. to a Set & remove duplicates, use 1 of the following techniques.
+
+1. Pass the collection to the constructor of the Set
+2. Call the addAll() of Set & pass the collection to it as an argument
+3. Iterate in the collection & pass each element as an argument to add() of Set
+
+Note that Collections is a class & Collection is an interface. 
+
+The Collections class consists of exclusive static methods only that operate on Collections for e.g. sort(), min(), max(), etc.
+
+Collection interface provides standard functionality to data structures like Set, List & Queue.The super interface of Collection is Iterable. It is typically used to pass Collections around and manipulate them where maximum generality is required. 
+
+However, in general terms, Collection/s refers to a group of objects, known as it's elements. Some collections accept duplicate elements where as some do not. Also some are ordered whereas some are not.
+
+8. Iterator – Iterator is used to cycle through the elements in a collection & display them. This is achieved by using an object that implements the Iterator interface. Each of the collection classes provides a method iterator( ) that returns an iterator to the start of the collection. By using the Iterator object, you can access each element in the collection, one element at a time. To use an iterator, follow the given steps :-
+
+1) Obtain an iterator to the start of the collection by calling the collection’s iterator( ) method.
+
+2) Set up a loop that makes a call to hasNext( ). Have the loop iterate as long as hasNext( ) returns true.
+
+3) Within the loop, obtain each element by calling next( ).
+
+Another interface ListIterator extends Iterator to allow bidirectional traversal of a list and also lets you modify an element. To traverse in reverse direction, use method hasPrevious( ) and to modify element, use method set( ).
+
+The main difference between Enumeration and Iterator is that an Enumertion acts as a "read only interface" i.e. using Enumeration, we cannot perform modifications to the Collection while traversing the elements of a Collection. However using Iterator, we can apply it to any collection object. Using Iterator, we can also add or remove elements in a collection. Also Enumeration is a legacy interface i.e. was introduced in earlier java versions to form the Collections framework & hence are fully compatible with the framework. However Iterator is not a legacy interface.
+
+Maps :-  A map is an object that stores associations between keys and values or key/value pairs. Given a key, you can find its value. Both keys and values are objects. The keys must be unique, but the values may be duplicated. Some maps can accept a null key and null values, others cannot.
+
+
+ 

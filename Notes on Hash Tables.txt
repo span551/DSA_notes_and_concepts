@@ -1,0 +1,114 @@
+Hashing
+
+Searching for a particular piece of information in large amounts of data is a very common task. In the earlier methods, the search for a record was carried out via a sequence of comparisons. The organisation of records greatly affected the efficiency of program.
+
+However, here we study a totally different technique of information retrieval called as "hashing", which doesn't involve comparisons. The location of an identifier 'X' in symbol table (hash table) is directly computed by using function f(x).  An identifier is the value to be stored.
+
+Definitions
+
+1. Hash function - A function that transforms an identifier "X" into a table index is called as "hash function".
+
+2. Hash Address - The address of identifier "X" computed by a function is called as "hash address".
+
+3. Hash table - A hash table is a data structure (collection) that is used to store name - value pairs. For e.g. an identifier can be a record of a student i.e. name, surname, per, etc. The name can be used to determine the Hash Address of the record in Hash table OR a dictionary in which name is the "word" & value is "meaning" OR a thesaurus in which the name is the "word" & value is "synonyms" OR C library of functions in which word is "function name" & value is it's "application", etc.
+
+4. Buckets - Each hash table is partitioned into buckets which in turn contain slots to store identifiers. A bucket can contain single or multiple slots.
+
+The hash function maps the identifier in one of the buckets.
+
+5. Synonyms - If the hash address of 2 or more identifiers returned by hash function is same, then these identifiers are called as synonyms of each other.
+
+6. Collision - When 2 identifiers occupy the same bucket, then collision is said to have occured.
+
+7. Overflow - An overflow is said to have occured when an identifier gets mapped into a full bucket. If the bucket has a single slot i.e. can accomodate only 1 identifier, then collision & overflow occur simultaneously and this is termed as "Hash Clash".
+
+8. Load Factor - If "n" is the total no. of identifiers in the table and "t" is the table size, then the load factor is "n/t". It represents the fraction of table that is occupied.
+
+Hashing Function
+
+A hashing function transforms an identifier "X" into a bucket address in the hash table. The desirable properties of such a function are as follows.
+
+1. It should be easily computable.
+2. It should minimize the no. of collisions.
+3. The hash function should compute the address which depends upon all or most of the characters from the identifier.
+
+Several hashing functions are popular
+
+a. Mid Square - This is widely used function in symbol / hash table applications. It is middle of square function which is computed by squaring the identifiers and using an appropriate no. of bits from the middle to obtain the bucket address.
+
+Since middle bits of the square will depend on all the bits in the identifier, different identifiers will result in different hash addresses, thereby minimising collisions.
+
+For e.g.  if identifier X = 225, X^2 = 050625, Hash Address = 06
+	            if X = 3205, X^2 = 01027205, Hash Address = 27
+
+b. Division - The modulus operator is used as hashing function. The identifier X is divided by some no M to calculate the address of X.
+
+	f(x) = X mod M
+
+This gives the address in the range of 0 to M-1 and hence the table should be of size M.
+
+c. Folding - In this method, the identifier X is partitioned into several parts all of the same length as that of the required address and added to get the hash address. For eg if the name is no 12345678, then partition the no into 2 parts ie 12,23,34,56 & 78 & add them to get sum 180. Ignore left digit ie 1 to get hash address 80.
+
+d. Digit Analysis - Here a statistical analysis of digits of no/keys is done. Select the digits of fixed positions which do not occur frequently. For eg if the digits at positions 3 & 6 do not occur frequently, select them to get the hash address.
+
+For eg consider following keys
+
+Key		Hash Adr
+1678512    	71
+1638454		35
+1756824		52
+2086561		86
+......
+
+Overflow Handling 
+
+However good the hash function may be, there are bound to be collisions and overflows. Once an overflow occurs, the identifier has to be stored somewhere else & should be retrieved later. So to make it efficient, foll. are some of the techniques used
+
+1. Linear Probing - In this method, the hash address of identifier X is obtained. If an overflow occurs, the identifier is placed in the next empty bucket.
+
+Advantage - It is a very simple technique of overflow handling.
+
+2. Quadratic Probing - Here instead of checking the identifier into the next empty bucket as in linear probing, a quadratic equation is used to determine the position to place the identifier. This ensures that the identifiers are fairly spread in the table.
+
+3. Rehashing - In this technique, if an overflow occurs, a new address is computed by using another hash function. A series of hash functions can be used f1, f2, f3, .......
+
+4. Chaining - In this method, another field is provided in the hash table which stores the address of the next record having the same hash address. This makes it easy to locate the records. This is achieved using 2 techniques
+
+a. Chaining without replacement & b. Chaining with replacement
+
+Chaining without replacement - In this technique, the hash address of an identifier is computed. If this position is vacant, it is placed there. If it's position is occupied, it is put in the next vacant position & a chain is formed to the new position.
+
+For eg if the identifiers are 11, 32, 41, 54 and 33 and the hash function is X mod 10, then identifiers 11 & 32 will get hashed into positions 1 & 2 respectively. The hash address of 41 is 1 but it's position is already occupied by 11. So 41 is put at empty position 3 & a chain is formed.
+
+Identifier 54 is hashed at position 4. The hash address of 33 is 3 but is already occupied by 41. So it is placed at position 5 and a chain is formed with 41.
+
+Disadvantage of this technique is to chain all synonyms. However since an identifier occupies the position of another identifier, even non synonyms get chained together, thereby increasing complexity.
+
+Chaining with replacement - In this method, if another identifier Y is occupying the position of an identifier X, then X replaces it and Y is relocated to a new position and the chains get updated.
+
+Let us consider the same eg. Here identifiers 11, 32, 41 and 54 get placed same way as before. However when 33 is to be placed, it's position is already occupied by 41. Thus 33 replaces 41 & 41 is put in empty slot at position 5 & the chain from element 11 at position 1 is modified from 3 to 5.
+
+Advantage - Most of the identifiers occupy their valid positions. Searching becomes easier since only synonyms get chained. 
+
+Disadvantage - Insertion & Deletion operations take more time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

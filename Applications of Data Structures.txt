@@ -1,0 +1,16 @@
+Applications of Data Structures
+
+1. Arrays - Used in numerical computations, image processing, database management, games,  implementing other data structures like Stack, Queue, etc.
+
+2. Stack - Interrupt handling, Recursion, Interconversion of expressions i.e. infix, postfix or prefix and their evaluations, backtracking, matching parenthesis in expression, etc.
+
+3. Applications of Queue – Used in computers for scheduling of resources to applications, Multiple print jobs are arranged in FIFO manner in a print queue & given to the printer, In batch programming, multiple jobs are combined into a batch & executed in sequential manner
+
+4. Linked List - Implementation of other structures like stack, queue, graphs, trees, Polynomial manipulations, Storing history of actions like undo/redo in text editors, Browsing History to navigate between visited pages (URLs can be stored in nodes of Doubly Linked List), File management system, etc.
+
+5. Trees - Representing hierarchial data in file systems, web sites, organisation data of employees, searching data efficiently (using Binary Search Tree, AVL trees), routing tables in networks, database indexing, etc.
+
+6. Graphs - Finding shortest path between source and destination on roads (google maps), computer networks, social networks, recommendation systems (amazon, youtube, netflix), project management,  block chain, etc. 
+
+7. Hash Tables - Address Book, Credit Card Authorization & Mapping Host Names
+
