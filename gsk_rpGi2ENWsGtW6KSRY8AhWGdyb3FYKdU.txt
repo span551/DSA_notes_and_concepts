@@ -1,0 +1,169 @@
+import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+class SearchScreen extends StatelessWidget {
+  const SearchScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> featuredBoards = [
+      {
+        'title': 'New Tops',
+        'category': 'Beaches',
+        'pins': '59 Pins · 7mo',
+        'image': 'assets/images/dress1.png',
+      },
+      {
+        'title': 'Co-Ords',
+        'category': 'city explorer',
+        'pins': '53 Pins · 1w',
+        'image': 'assets/images/coords.png',
+      },
+    ];
+
+    final List<String> bannerImages = [
+      'assets/images/daisy edgar-jones.jpg',
+      'assets/images/download.jpg',
+      'assets/images/marianne.jpg',
+    ];
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            // Search Bar
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: const TextField(
+                style: TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Search for the vibe',
+                  hintStyle: TextStyle(color: Colors.grey),
+                  icon: Icon(Icons.search, color: Colors.white),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Carousel Banner
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 200,
+                autoPlay: true,
+                enlargeCenterPage: true,
+              ),
+              items: bannerImages.map((imgPath) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset(imgPath, fit: BoxFit.cover),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.black.withOpacity(0.6),
+                              Colors.transparent,
+                            ],
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                          ),
+                        ),
+                      ),
+                      const Positioned(
+                        bottom: 20,
+                        left: 20,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Sun, sand & style',
+                              style: TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                            Text(
+                              'Goa vacation looks',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+
+            const SizedBox(height: 30),
+            const Text(
+              'Explore featured boards',
+              style: TextStyle(color: Colors.white70, fontSize: 16),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Ideas you might like',
+              style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+
+            // Featured Boards
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: featuredBoards.map((board) {
+                  return Container(
+                    width: 160,
+                    margin: const EdgeInsets.only(right: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            board['image'],
+                            height: 120,
+                            width: 160,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          board['title'],
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          board['category'],
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                        Text(
+                          board['pins'],
+                          style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

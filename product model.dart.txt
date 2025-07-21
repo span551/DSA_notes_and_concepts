@@ -1,0 +1,82 @@
+//product model.dart                                                                                                                    class Product {
+  final String id;
+  final String title;
+  final String category;
+  final double price;
+  final String imageUrl;
+  final String brand;
+  final List<String> colors;
+  final List<String> sizes;
+  final String description;
+  final double rating;
+  final bool isNew;
+  final bool isTrending;
+
+  Product({
+    required this.id,
+    required this.title,
+    required this.category,
+    required this.price,
+    required this.imageUrl,
+    required this.brand,
+    this.colors = const [],
+    this.sizes = const [],
+    this.description = '',
+    this.rating = 0.0,
+    this.isNew = false,
+    this.isTrending = false,
+  });
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'] ?? '',
+      title: json['title'] ?? '',
+      category: json['category'] ?? '',
+      price: (json['price'] ?? 0).toDouble(),
+      imageUrl: json['imageUrl'] ?? '',
+      brand: json['brand'] ?? '',
+      colors: List<String>.from(json['colors'] ?? []),
+      sizes: List<String>.from(json['sizes'] ?? []),
+      description: json['description'] ?? '',
+      rating: (json['rating'] ?? 0).toDouble(),
+      isNew: json['isNew'] ?? false,
+      isTrending: json['isTrending'] ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'category': category,
+      'price': price,
+      'imageUrl': imageUrl,
+      'brand': brand,
+      'colors': colors,
+      'sizes': sizes,
+      'description': description,
+      'rating': rating,
+      'isNew': isNew,
+      'isTrending': isTrending,
+    };
+  }
+}
+
+enum SwipeAction {
+  like,
+  dislike,
+  superLike,
+  pass,
+}
+
+class SwipeResult {
+  final Product product;
+  final SwipeAction action;
+  final DateTime timestamp;
+
+  SwipeResult({
+    required this.product,
+    required this.action,
+    required this.timestamp,
+  });
+}

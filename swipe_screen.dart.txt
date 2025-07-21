@@ -1,0 +1,385 @@
+swipe_screen.dart                                                                                                                               import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'controllers/swipe_controller.dart';
+import 'widgets/card_stack.dart';
+
+class SwipeScreen extends StatefulWidget {
+  const SwipeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SwipeScreen> createState() => _SwipeScreenState();
+}
+
+class _SwipeScreenState extends State<SwipeScreen>
+    with TickerProviderStateMixin {
+  late SwipeController _swipeController;
+  late AnimationController _tutorialController;
+  late Animation<double> _tutorialAnimation;
+  bool _showTutorial = true;
+
+  int _currentIndex = 0;
+  final TextEditingController _searchController = TextEditingController();
+
+  final List<IconData> _icons = [
+    Icons.home,
+    Icons.push_pin_sharp,
+    Icons.shopping_cart,
+    Icons.person,
+  ];
+
+  final List<String> _labels = [
+    'Home',
+    'Pin',
+    'Cart',
+    'Profile',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _swipeController = SwipeController();
+
+    _tutorialController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    _tutorialAnimation = CurvedAnimation(
+      parent: _tutorialController,
+      curve: Curves.easeInOut,
+    );
+
+    _showTutorialIfNeeded();
+  }
+
+  @override
+  void dispose() {
+    _swipeController.dispose();
+    _tutorialController.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _showTutorialIfNeeded() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted && _showTutorial) {
+        _tutorialController.repeat(reverse: true);
+        Future.delayed(const Duration(seconds: 4), () {
+          _hideTutorial();
+        });
+      }
+    });
+  }
+
+  void _hideTutorial() {
+    if (mounted) {
+      setState(() {
+        _showTutorial = false;
+      });
+      _tutorialController.stop();
+    }
+  }
+
+  void _onSearchChanged(String value) {
+    print('Search query: $value');
+  }
+
+  void _onSearchSubmitted(String value) {
+    print('Search submitted: $value');
+  }
+
+  void _onNavigationTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pop(context);
+        break;
+      case 1:
+        print('Pin tapped');
+        break;
+      case 2:
+        print('Cart tapped');
+        break;
+      case 3:
+        print('Profile tapped');
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final cardHeight = screenHeight * 0.85;
+    final cardWidth = screenWidth * 1.0;
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFFAF9F6), // light off-white
+      body: Stack(
+        children: [
+          // Main swipe content
+          Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + 90,
+              bottom: 110,
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Container(
+                      width: cardWidth,
+                      height: cardHeight,
+                      padding: const EdgeInsets.all(16),
+                      child: CardStack(
+                        swipeController: _swipeController,
+                        visibleCards: 2,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Tutorial Overlay
+          if (_showTutorial)
+            AnimatedBuilder(
+              animation: _tutorialAnimation,
+              builder: (context, child) {
+                return Positioned.fill(
+                  child: Container(
+                    color: Colors.white.withOpacity(0.8),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Transform.translate(
+                            offset: Offset(50 * _tutorialAnimation.value, 0),
+                            child: const Icon(
+                              Icons.swipe,
+                              color: Colors.black,
+                              size: 60,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          const Text(
+                            'Swipe right to like\nSwipe left to pass\nSwipe up to super like',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 18,
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextButton(
+                            onPressed: _hideTutorial,
+                            child: const Text(
+                              'Got it!',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+
+          // Top Search Bar
+          Positioned(
+            left: 16,
+            right: 16,
+            top: MediaQuery.of(context).padding.top + 16,
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0ECE3).withOpacity(0.99),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              height: 55,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.search,
+                      color: Colors.grey[600],
+                      size: 24,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: _onSearchChanged,
+                        onSubmitted: _onSearchSubmitted,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        decoration: const InputDecoration(
+                          hintText: 'Search for the Vibe...',
+                          hintStyle: TextStyle(
+                            color: Color(0xFFB0AFAF),
+                            fontSize: 16,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(vertical: 12),
+                        ),
+                      ),
+                    ),
+                    if (_searchController.text.isNotEmpty)
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _searchController.clear();
+                          });
+                        },
+                        child: Icon(
+                          Icons.clear,
+                          color: Colors.grey[600],
+                          size: 20,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Bottom Navigation Bar
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 20,
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color(0xFFF0ECE3).withOpacity(0.99),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              height: 75,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(_icons.length, (index) {
+                  final isSelected = _currentIndex == index;
+                  return GestureDetector(
+                    onTap: () => _onNavigationTap(index),
+                    child: Container(
+                      width: 60,
+                      height: 75,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _icons[index],
+                            size: 24,
+                            color: isSelected
+                                ? Colors.black
+                                : const Color(0xFF9A9A9A),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _labels[index],
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isSelected
+                                  ? Colors.black
+                                  : const Color(0xFF9A9A9A),
+                              fontWeight: isSelected
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showStatsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Your Swipe Stats',
+          style: TextStyle(color: Colors.black),
+        ),
+        content: AnimatedBuilder(
+          animation: _swipeController,
+          builder: (context, child) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildStatRow('Total Swipes', _swipeController.totalSwipes.toString()),
+                _buildStatRow('Likes', _swipeController.likesCount.toString()),
+                _buildStatRow('Passes', _swipeController.dislikesCount.toString()),
+                _buildStatRow(
+                  'Like Rate',
+                  '${(_swipeController.likeRatio * 100).toStringAsFixed(1)}%',
+                ),
+              ],
+            );
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Close',
+              style: TextStyle(color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(color: Colors.grey[700])),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

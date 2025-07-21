@@ -1,0 +1,337 @@
+swipe_card.dart                                                                                                                                 import 'package:flutter/material.dart';
+import '../models/product_model.dart';
+
+class SwipeCard extends StatefulWidget {
+  final Product product;
+  final VoidCallback? onSwipeLeft;
+  final VoidCallback? onSwipeRight;
+  final VoidCallback? onSuperLike;
+  final bool isActive;
+  final double scale;
+  final double opacity;
+
+  const SwipeCard({
+    Key? key,
+    required this.product,
+    this.onSwipeLeft,
+    this.onSwipeRight,
+    this.onSuperLike,
+    this.isActive = true,
+    this.scale = 1.0,
+    this.opacity = 1.0,
+  }) : super(key: key);
+
+  @override
+  State<SwipeCard> createState() => _SwipeCardState();
+}
+
+class _SwipeCardState extends State<SwipeCard> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _rotationAnimation;
+  late Animation<Offset> _positionAnimation;
+
+  Offset _dragOffset = Offset.zero;
+  bool _isDragging = false;
+  double _dragDistance = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _rotationAnimation = Tween<double>(begin: 0, end: 0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+    _positionAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _onPanStart(DragStartDetails details) {
+    if (!widget.isActive) return;
+    _isDragging = true;
+    _animationController.stop();
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    if (!widget.isActive) return;
+    setState(() {
+      _dragOffset += details.delta;
+      _dragDistance = _dragOffset.distance;
+    });
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    if (!widget.isActive) return;
+    _isDragging = false;
+
+    const double threshold = 100.0;
+    final double velocity = details.velocity.pixelsPerSecond.dx;
+
+    if (_dragOffset.dx > threshold || velocity > 1000) {
+      _swipeRight();
+    } else if (_dragOffset.dx < -threshold || velocity < -1000) {
+      _swipeLeft();
+    } else if (_dragOffset.dy < -threshold) {
+      _superLike();
+    } else {
+      _resetPosition();
+    }
+  }
+
+  void _swipeRight() {
+    _rotationAnimation = Tween<double>(
+      begin: _getRotation(),
+      end: 15,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+
+    _positionAnimation = Tween<Offset>(
+      begin: _dragOffset,
+      end: const Offset(800, 0),
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+
+    _animationController.forward().then((_) {
+      widget.onSwipeRight?.call();
+    });
+  }
+
+  void _swipeLeft() {
+    _rotationAnimation = Tween<double>(
+      begin: _getRotation(),
+      end: -15,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+
+    _positionAnimation = Tween<Offset>(
+      begin: _dragOffset,
+      end: const Offset(-800, 0),
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+
+    _animationController.forward().then((_) {
+      widget.onSwipeLeft?.call();
+    });
+  }
+
+  void _superLike() {
+    _positionAnimation = Tween<Offset>(
+      begin: _dragOffset,
+      end: const Offset(0, -800),
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
+
+    _animationController.forward().then((_) {
+      widget.onSuperLike?.call();
+    });
+  }
+
+  void _resetPosition() {
+    _rotationAnimation = Tween<double>(
+      begin: _getRotation(),
+      end: 0,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticOut));
+
+    _positionAnimation = Tween<Offset>(
+      begin: _dragOffset,
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.elasticOut));
+
+    _animationController.forward().then((_) {
+      setState(() {
+        _dragOffset = Offset.zero;
+        _dragDistance = 0;
+      });
+    });
+  }
+
+  double _getRotation() {
+    return _dragOffset.dx / 10;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        final offset = _isDragging ? _dragOffset : _positionAnimation.value;
+        final rotation = _isDragging ? _getRotation() : _rotationAnimation.value;
+
+        return Transform.translate(
+          offset: offset,
+          child: Transform.rotate(
+            angle: rotation * (3.14159 / 180),
+            child: Transform.scale(
+              scale: widget.scale,
+              child: Opacity(
+                opacity: widget.opacity,
+                child: GestureDetector(
+                  onPanStart: _onPanStart,
+                  onPanUpdate: _onPanUpdate,
+                  onPanEnd: _onPanEnd,
+                  child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    margin: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Stack(
+                        children: [
+                          // Image
+                          Positioned.fill(
+                            child: Image.network(
+                              widget.product.imageUrl,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Colors.grey[800]!,
+                                        Colors.grey[900]!,
+                                      ],
+                                    ),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.image_not_supported,
+                                      color: Colors.white54,
+                                      size: 48,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          // Overlay gradient
+                          Positioned.fill(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                    Colors.black.withOpacity(0.7),
+                                  ],
+                                  stops: const [0.0, 0.4, 1.0],
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Product Info
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // Badges
+                                  Row(
+                                    children: [
+                                      if (widget.product.isNew)
+                                        _buildBadge('NEW', Colors.green),
+                                      if (widget.product.isNew && widget.product.isTrending)
+                                        const SizedBox(width: 8),
+                                      if (widget.product.isTrending)
+                                        _buildBadge('TRENDING', Colors.orange),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  // Title and Price
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          widget.product.title,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Text(
+                                        '\$${widget.product.price.toStringAsFixed(2)}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  if (widget.product.rating > 0)
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          widget.product.rating.toStringAsFixed(1),
+                                          style: TextStyle(
+                                            color: Colors.white.withOpacity(0.8),
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBadge(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+}

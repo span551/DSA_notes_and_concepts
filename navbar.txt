@@ -1,0 +1,109 @@
+import 'package:flutter/material.dart';
+import 'home_screen.dart';
+
+class NavigationMenu extends StatefulWidget {
+  const NavigationMenu({super.key});
+
+  @override
+  State<NavigationMenu> createState() => _NavigationMenuState();
+}
+
+class _NavigationMenuState extends State<NavigationMenu> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    const HomeScreen(),
+    const Center(child: Text('Cart', style: TextStyle(color: Colors.white))),
+    const Center(child: Text('Wishlist', style: TextStyle(color: Colors.white))),
+    const Center(child: Text('Profile', style: TextStyle(color: Colors.white))),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          _pages[_currentIndex],
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 20,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                height: 70,
+                color: Colors.white.withOpacity(0.99),
+                child: BottomNavigationBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  currentIndex: _currentIndex,
+                  type: BottomNavigationBarType.fixed,
+                  selectedItemColor: Colors.black,
+                  unselectedItemColor: Colors.grey[700],
+                  selectedLabelStyle: TextStyle(fontSize: 12),
+                  unselectedLabelStyle: TextStyle(fontSize: 12),
+                  onTap: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(height: 6),
+                          Icon(Icons.home, size: 26),
+                          SizedBox(height: 2),
+                          Text("Home", style: TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(height: 6),
+                          Icon(Icons.shopping_cart, size: 26),
+                          SizedBox(height: 2),
+                          Text("Cart", style: TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(height: 6),
+                          Icon(Icons.favorite, size: 26),
+                          SizedBox(height: 2),
+                          Text("Wishlist", style: TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                      label: '',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          SizedBox(height: 6),
+                          Icon(Icons.person, size: 26),
+                          SizedBox(height: 2),
+                          Text("Profile", style: TextStyle(fontSize: 12)),
+                        ],
+                      ),
+                      label: '',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

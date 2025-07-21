@@ -1,0 +1,109 @@
+swipecontroller.dart                                                                                                                                  import 'package:flutter/material.dart';
+import '../models/product_model.dart';
+import '../data/mock_products.dart';
+
+class SwipeController extends ChangeNotifier {
+  List<Product> _products = [];
+  List<SwipeResult> _swipeHistory = [];
+  int _currentIndex = 0;
+
+  List<Product> get products => _products;
+  List<SwipeResult> get swipeHistory => _swipeHistory;
+  int get currentIndex => _currentIndex;
+  Product? get currentProduct =>
+      _currentIndex < _products.length ? _products[_currentIndex] : null;
+  bool get hasMoreProducts => _currentIndex < _products.length;
+
+  SwipeController() {
+    _loadProducts();
+  }
+
+  void _loadProducts() {
+    _products = MockProducts.getFashionProducts();
+    _products.shuffle(); // Randomize order for better experience
+    notifyListeners();
+  }
+
+  void swipeRight(Product product) {
+    _recordSwipe(product, SwipeAction.like);
+    _moveToNext();
+  }
+
+  void swipeLeft(Product product) {
+    _recordSwipe(product, SwipeAction.dislike);
+    _moveToNext();
+  }
+
+  void superLike(Product product) {
+    _recordSwipe(product, SwipeAction.superLike);
+    _moveToNext();
+  }
+
+  void _recordSwipe(Product product, SwipeAction action) {
+    final result = SwipeResult(
+      product: product,
+      action: action,
+      timestamp: DateTime.now(),
+    );
+    _swipeHistory.add(result);
+  }
+
+  void _moveToNext() {
+    _currentIndex++;
+    notifyListeners();
+
+    // Load more products when running low
+    if (_currentIndex >= _products.length - 2) {
+      _loadMoreProducts();
+    }
+  }
+
+  void _loadMoreProducts() {
+    // In a real app, this would fetch from API
+    // For now, we'll shuffle and add the same products
+    final moreProducts = MockProducts.getFashionProducts();
+    moreProducts.shuffle();
+    _products.addAll(moreProducts);
+    notifyListeners();
+  }
+
+  void undoLastSwipe() {
+    if (_swipeHistory.isNotEmpty && _currentIndex > 0) {
+      _swipeHistory.removeLast();
+      _currentIndex--;
+      notifyListeners();
+    }
+  }
+
+  void reset() {
+    _currentIndex = 0;
+    _swipeHistory.clear();
+    _loadProducts();
+  }
+
+  List<Product> getLikedProducts() {
+    return _swipeHistory
+        .where((result) => result.action == SwipeAction.like ||
+        result.action == SwipeAction.superLike)
+        .map((result) => result.product)
+        .toList();
+  }
+
+  List<Product> getDislikedProducts() {
+    return _swipeHistory
+        .where((result) => result.action == SwipeAction.dislike)
+        .map((result) => result.product)
+        .toList();
+  }
+
+  // Analytics helpers
+  int get totalSwipes => _swipeHistory.length;
+  int get likesCount => _swipeHistory
+      .where((r) => r.action == SwipeAction.like || r.action == SwipeAction.superLike)
+      .length;
+  int get dislikesCount => _swipeHistory
+      .where((r) => r.action == SwipeAction.dislike)
+      .length;
+
+  double get likeRatio => totalSwipes > 0 ? likesCount / totalSwipes : 0.0;
+}

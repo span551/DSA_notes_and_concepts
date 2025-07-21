@@ -1,0 +1,15 @@
+buttons in the navbar : home , closet ,explore, cart , profile
+the app starts with a splash screen by mentioning the name of the app "Drip"
+after that directly navigates to the home screen 
+now one by one i will mention the functionality of every navbar element
+1)home: the home screen will start with catalogue of women dresses of various kinds , where the user will swipe through the dresses (like tinder) swipe left if dislike , swipe right if like and swipe upside if add to cart
+2)cart : the cart should look very asthetic and the working logic should also be working (like adding products(+1/-1)etc.) 
+(the cart should be functional)
+3)explore: in the explore button there should be stylish sections like shown in the photo i provided(Halloween, summer, trending etc),and in the explore button should also showcase products in the swipe functionality
+4)profile : profile should also be functional.
+
+the search bar (vibe search)should always be present at the top so that the user can search a product without hassle   
+
+keep the theme or color scheme of the app in white & black keep it chic and asthetic 
+
+below the search bar the filter should also be present for color, price brands etc
